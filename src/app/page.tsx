@@ -1,5 +1,11 @@
-import Hero from "@/components/Hero";
+import Hero from "@/components/Hero"
+import CuratedSection from "@/components/Curated/CuratedSection"
 
 export default function Home() {
-  return <Hero />;
+  return (
+    <main>
+      <Hero />
+   <CuratedSection></CuratedSection>
+    </main>
+  )
 }
