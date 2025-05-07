@@ -1,30 +1,22 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { Product } from '@/types/product'
 import ItemCard from './ItemCard'
+import axios from 'axios'
+import { PRODUCT_SETTINGS } from '@/config/settings'
+import { getProducts } from '@/services/shopify'
 
-interface Product {
-  title: string
-  description: string
-  imageSrc: string
-}
+
 
 export default function CuratedSection() {
   const [items, setItems] = useState<Product[]>([])
-
   useEffect(() => {
-    fetch('/api/products')
-      .then((res) => res.json())
-      .then((data) => {
-        const parsed = data.products.edges.map((edge: any) => ({
-          title: edge.node.title,
-          description: edge.node.description,
-          imageSrc: edge.node.featuredImage?.url || '/fallback.jpg',
-        }))
-        setItems(parsed)
-      })
+    getProducts(PRODUCT_SETTINGS.defaultCount)
+      .then(setItems)
+      .catch((err) => console.error("Error fetching products:", err))
   }, [])
-
+  
   return (
     <section className="bg-[#fff8f2] py-16">
       <div className="max-w-6xl mx-auto px-6 text-center">

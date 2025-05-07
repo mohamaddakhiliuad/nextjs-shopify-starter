@@ -1,27 +1,39 @@
 // /src/app/api/products/route.ts
 export const runtime = 'edge'; // می‌تونی حذف کنی اگر نمی‌خوای روی edge اجرا بشه
 
-export async function GET() {
-  const SHOPIFY_DOMAIN = "https://xrxnq7-16.myshopify.com";
-  const STOREFRONT_TOKEN = "67ae2aa6cb19d23b206e29fd651e6b6b";
+export async function GET(request: Request) {
+  const SHOPIFY_DOMAIN = process.env.SHOPIFY_DOMAIN!;
+  const STOREFRONT_TOKEN = process.env.SHOPIFY_TOKEN!;
+  const { searchParams } = new URL(request.url)
+
+  const count = searchParams.get('count') || '3'
+  const collection = searchParams.get('collection') || null
+
 
   const query = `
-    {
-      products(first: 3) {
-        edges {
-          node {
-            id
-            title
-            description
-            featuredImage {
-              url
-              altText
+  {
+    products(first: ${count}) {
+      edges {
+        node {
+          id
+          title
+          description
+          featuredImage {
+            url
+            altText
+          }
+          priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
             }
           }
         }
       }
     }
-  `;
+  }
+`
+
 
   const response = await fetch(`${SHOPIFY_DOMAIN}/api/2023-07/graphql.json`, {
     method: "POST",
