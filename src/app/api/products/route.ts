@@ -7,33 +7,31 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
 
   const count = searchParams.get('count') || '3'
-  const collection = searchParams.get('collection') || null
-
 
   const query = `
-  {
-    products(first: ${count}) {
-      edges {
-        node {
-          id
-          title
-          description
-          featuredImage {
-            url
-            altText
-          }
-          priceRange {
-            minVariantPrice {
-              amount
-              currencyCode
+    {
+      products(first: ${count}) {
+        edges {
+          node {
+            id
+            title
+            description
+            handle
+            featuredImage {
+              url
+              altText
+            }
+            priceRange {
+              minVariantPrice {
+                amount
+                currencyCode
+              }
             }
           }
         }
       }
     }
-  }
-`
-
+  `;
 
   const response = await fetch(`${SHOPIFY_DOMAIN}/api/2023-07/graphql.json`, {
     method: "POST",
@@ -45,6 +43,9 @@ export async function GET(request: Request) {
   });
 
   const json = await response.json();
+
+  // 🧪 Log the raw API response to terminal
+  console.log("🧪 Shopify raw response:", JSON.stringify(json, null, 2));
 
   return new Response(JSON.stringify(json.data), {
     headers: {

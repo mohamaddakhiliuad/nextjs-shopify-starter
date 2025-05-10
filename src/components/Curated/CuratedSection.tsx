@@ -7,7 +7,7 @@ import axios from 'axios'
 import { PRODUCT_SETTINGS } from '@/config/settings'
 import { getProducts } from '@/services/shopify'
 
-
+const shopBase = 'https://xrxnq7-16.myshopify.com/products'
 
 export default function CuratedSection() {
   const [items, setItems] = useState<Product[]>([])
@@ -25,12 +25,16 @@ export default function CuratedSection() {
         </h2>
         <div className="grid md:grid-cols-3 gap-8">
           {items.map((item, idx) => (
-            <ItemCard
-              key={idx}
-              title={item.title}
-              description={item.description}
-              imageSrc={item.imageSrc}
-            />
+          <ItemCard
+          key={idx}
+          {...item}
+          shopUrl={shopBase}
+          onShopNowClick={(handle, url) => {
+            if (url && handle) {
+              window.open(`${url}/${handle}`, '_blank')
+            }
+          }}
+        />
           ))}
         </div>
       </div>
