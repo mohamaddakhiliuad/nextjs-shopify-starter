@@ -45,7 +45,7 @@ export async function GET(request: Request) {
   const json = await response.json();
 
   // 🧪 Log the raw API response to terminal
-  console.log("🧪 Shopify raw response:", JSON.stringify(json, null, 2));
+  //console.log("🧪 Shopify raw response:", JSON.stringify(json, null, 2));
 
   return new Response(JSON.stringify(json.data), {
     headers: {
