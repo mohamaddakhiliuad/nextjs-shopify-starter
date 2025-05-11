@@ -17,9 +17,9 @@ export async function getProducts(count: number = 3): Promise<Product[]> {
         handle: edge.node.handle,
 
       }
-      console.log("🧪 full node:", edge) // 
-      console.log("🧪 full node:", edge.node) // 
-      console.log("🧪 full node:",  edge.node.handle) // 
+      //console.log("🧪 full node:", edge) // 
+      //console.log("🧪 full node:", edge.node) // 
+     // console.log("🧪 full node:",  edge.node.handle) // 
   
       return product
     })
