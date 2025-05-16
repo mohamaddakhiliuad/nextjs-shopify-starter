@@ -1,6 +1,7 @@
 # 🛍️ Headless Shopify Starter with Next.js 14 (App Router)
 
-A modern, clean, and modular frontend integration with Shopify Storefront API using **Next.js 14**, **App Router**, and **Tailwind CSS**.   ☀️
+A clean and modular frontend integration for modern lifestyle e-commerce using **Next.js 14**, **Tailwind CSS**, and the **Shopify Storefront API**.  
+Designed as the public foundation for the Noura project — a lifestyle brand for calm, mindful, and purpose-driven living. ☀️
 
 ---
 
@@ -9,17 +10,17 @@ A modern, clean, and modular frontend integration with Shopify Storefront API us
 - ✅ **Next.js App Router (TypeScript)**
 - ✅ **Tailwind CSS 3**
 - ✅ **Headless Shopify Integration via Storefront GraphQL API**
-- ✅ Typed `Product` interface
-- ✅ Modular structure for easy scaling
+- ✅ Typed `Product` interface & modular `ProductCard`/`ProductGrid`
+- ✅ Responsive grid with filtering, empty state, and future AI-based expansion
 - ✅ Environment-based domain control (`.env`)
-- ✅ Click handler for advanced `Shop Now` control
+- ✅ Clean architecture for scalable UI development
 
 ---
 
-## ⚠️ Important
+## ⚠️ Note
 
-> This repo represents the **public starter version** of a full headless e-commerce platform.  
-> Private features (checkout, modal preview, cart system, analytics, etc.) are kept in a separate private repository.
+> This repo contains the **public-facing UI starter**.  
+> Sensitive or commercial features like cart, checkout, AI-based recommendations, and coaching integrations are developed in a **private repository**.
 
 ---
 
@@ -28,13 +29,11 @@ A modern, clean, and modular frontend integration with Shopify Storefront API us
 - [Next.js 14 (App Router)](https://nextjs.org)
 - [Tailwind CSS](https://tailwindcss.com)
 - [Shopify Storefront API](https://shopify.dev/docs/api/storefront)
-- TypeScript + Axios
+- TypeScript, Axios, clsx
 
 ---
 
 ## 🚀 Getting Started
-
-### 1. Clone the repo
 
 ```bash
 git clone https://github.com/mohamaddakhiliuad/nextjs-shopify-starter
