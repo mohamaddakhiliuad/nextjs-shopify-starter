@@ -1,4 +1,5 @@
 import { Product } from '@/types/product'
+import Link from 'next/link'
 import {
   buttonPrimary,
   buttonOutline,
@@ -8,6 +9,7 @@ import {
   productDescription,
   productPrice,
   cardButtonGroup,
+  productTitleInsidGrid,
 } from '@/styles/formStyles'
 
 interface Props extends Product {
@@ -37,7 +39,7 @@ export default function ItemCard({
       <img src={imageSrc} alt={title} className={productImage} />
 
       <div>
-        <h3 className={productTitle}>{title}</h3>
+        <h3 className={productTitleInsidGrid}>{title}</h3>
         <p className={productDescription}>{description}</p>
 
         {price && (
@@ -68,24 +70,12 @@ export default function ItemCard({
             </a>
           )}
 
-          {/* Read More */}
-          {onReadMoreClick ? (
-            <button
-              onClick={() => onReadMoreClick(handle, shopUrl)}
-              className={buttonOutline + ' text-sm'}
-            >
-              Read More
-            </button>
-          ) : (
-            <a
-              href={`${baseUrl}/products/${handle}`}
-              className={buttonOutline + ' text-sm'}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Read More
-            </a>
-          )}
+         <Link
+      href={`/products/${handle}`}
+      className={buttonOutline + ' text-sm text-center'}
+    >
+      Read More
+    </Link>
         </div>
       )}
     </div>
