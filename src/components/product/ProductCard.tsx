@@ -2,6 +2,8 @@
 
 import Link from 'next/link'
 import { Product } from '@/types/product'
+import clsx from 'clsx'
+
 import {
   cardBase,
   productImage,
@@ -18,31 +20,29 @@ interface ProductCardProps {
 /**
  * ProductCard
  * ---------------------------
- * Reusable UI card for displaying product summary in grid/list views.
- * 
- * Props:
- * - product: Product object (title, price, image, handle, etc.)
- * - shopUrl: Full base URL for the product on external store
- *
- * Usage:
- * <ProductCard product={p} shopUrl="https://yourstore.com" />
+ * Clean and structured card for displaying a product with image, title, price, and actions.
+ * - Styled via formStyles.ts for consistent design
+ * - Includes links to detail page and external Shopify product
  */
 export default function ProductCard({ product, shopUrl }: ProductCardProps) {
   const productLink = `/products/${product.handle}`
   const imageSrc = product.imageSrc
 
   return (
-    <div className={cardBase}>
+    <div className={cardBase} itemScope itemType="https://schema.org/Product">
       <Link href={productLink}>
         <img
           src={imageSrc}
           alt={product.title}
           className={productImage}
+          itemProp="image"
         />
       </Link>
 
       <h3 className={productTitleInsidGrid}>
-        <Link href={productLink}>{product.title}</Link>
+        <Link href={productLink} itemProp="name">
+          {product.title}
+        </Link>
       </h3>
 
       <p className={productPrice}>

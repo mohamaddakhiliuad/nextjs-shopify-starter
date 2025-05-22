@@ -7,12 +7,13 @@ export interface Product {
   currency?: string
   handle?: string
   url?: string
-  tag?: string
+  tags?: string[]           // ✅ NEW: Shopify product tags for filtering
+  category?: string         // ✅ NEW: Shopify productType (used as category)
   variantId?: string
   variants?: {
     id: string
     title: string
     color: string
-     image?: string
+    image?: string
   }[]
 }

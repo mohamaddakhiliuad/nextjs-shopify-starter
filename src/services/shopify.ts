@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { Product } from '@/types/product'
+import { RELATED_PRODUCT_STRATEGY, RELATED_LIMIT } from '@/config/settings'
 
 const fallbackImage = '/fallback.jpg'
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
@@ -7,9 +8,9 @@ const shopifyUrl = process.env.NEXT_PUBLIC_SHOPIFY_DOMAIN!
 
 /**
  * getProductByHandle
- * ------------------
- * Fetches a single product from Shopify based on its handle (slug).
- * Used for detailed product pages (ProductDetail).
+ * ---------------------------------------------------
+ * Fetches a full product by its handle from the internal API.
+ * Includes title, description, tags, category, variants.
  */
 export async function getProductByHandle(handle: string): Promise<Product> {
   const res = await fetch(`${siteUrl}/api/products?handle=${handle}`)
@@ -44,6 +45,8 @@ export async function getProductByHandle(handle: string): Promise<Product> {
     currency: node.priceRange?.minVariantPrice?.currencyCode || 'USD',
     handle: node.handle,
     url: shopifyUrl,
+    tags: node.tags || [],
+    category: node.productType || '',
     variantId: variants[0]?.id || '',
     variants,
   }
@@ -51,9 +54,9 @@ export async function getProductByHandle(handle: string): Promise<Product> {
 
 /**
  * getProducts
- * ------------------
- * Fetches a list of products from Shopify (used for general listing).
- * Used in homepage, related products, etc.
+ * ---------------------------------------------------
+ * Fetches a basic list of products from internal API.
+ * Use for homepage, collections, or related suggestions.
  */
 export async function getProducts(count: number = 3): Promise<Product[]> {
   const res = await axios.get(`/api/products?count=${count}`)
@@ -71,17 +74,18 @@ export async function getProducts(count: number = 3): Promise<Product[]> {
       currency: node.priceRange?.minVariantPrice?.currencyCode || 'USD',
       handle: node.handle,
       url: shopifyUrl,
+      tags: node.tags || [],
+      category: node.productType || '',
       variantId: node.variants?.edges?.[0]?.node?.id || '',
-      variants: [], // For preview, we skip full variant loading
+      variants: [],
     }
   })
 }
 
 /**
  * getProductsByTag
- * ------------------
- * Fetches Shopify products filtered by tag (e.g., 'outdoor', 'lamp', 'holiday').
- * Used for related products, dynamic category sections, etc.
+ * ---------------------------------------------------
+ * Fetches products that match a specific tag (for related suggestions).
  */
 export async function getProductsByTag(tag: string): Promise<Product[]> {
   const res = await axios.get(`/api/products?tag=${tag}`)
@@ -99,8 +103,83 @@ export async function getProductsByTag(tag: string): Promise<Product[]> {
       currency: node.priceRange?.minVariantPrice?.currencyCode || 'USD',
       handle: node.handle,
       url: shopifyUrl,
+      tags: node.tags || [],
+      category: node.productType || '',
       variantId: node.variants?.edges?.[0]?.node?.id || '',
       variants: [],
     }
   })
+}
+
+/**
+ * getRelatedProductsByCategory
+ * ---------------------------------------------------
+ * Fetches products by shared category (productType),
+ * excluding the current product by handle.
+ */
+export async function getRelatedProductsByCategory(category: string, excludeHandle: string, limit = 4): Promise<Product[]> {
+  const res = await axios.get(`/api/products?category=${category}`)
+  const nodes = res.data.products?.edges || []
+
+  return nodes
+    .map((edge: any) => edge.node)
+    .filter((node: any) => node.handle !== excludeHandle)
+    .slice(0, limit)
+    .map((node: any) => ({
+      id: node.id,
+      title: node.title,
+      description: node.description,
+      imageSrc: node.featuredImage?.url || fallbackImage,
+      price: node.priceRange?.minVariantPrice?.amount || '0.00',
+      currency: node.priceRange?.minVariantPrice?.currencyCode || 'USD',
+      handle: node.handle,
+      url: shopifyUrl,
+      tags: node.tags || [],
+      category: node.productType || '',
+      variantId: node.variants?.edges?.[0]?.node?.id || '',
+      variants: [],
+    }))
+}
+export async function getRelatedProductsDynamic(product: Product): Promise<Product[]> {
+  const exclude = product.handle
+
+  if (RELATED_PRODUCT_STRATEGY === 'tag' && product.tags?.[0]) {
+    return getRelatedProductsByTag(product.tags[0], exclude, RELATED_LIMIT)
+  }
+
+  if (RELATED_PRODUCT_STRATEGY === 'category' && product.category) {
+    return getRelatedProductsByCategory(product.category, exclude, RELATED_LIMIT)
+  }
+
+  // fallback: latest products
+  return getProducts(RELATED_LIMIT)
+}
+
+/**
+ * getRelatedProductsByTag
+ * ---------------------------------------------------
+ * Fetches products with a matching tag (excluding current product).
+ */
+export async function getRelatedProductsByTag(tag: string, excludeHandle: string, limit = 4): Promise<Product[]> {
+  const res = await axios.get(`/api/products?tag=${tag}`)
+  const nodes = res.data.products?.edges || []
+
+  return nodes
+    .map((edge: any) => edge.node)
+    .filter((node: any) => node.handle !== excludeHandle)
+    .slice(0, limit)
+    .map((node: any) => ({
+      id: node.id,
+      title: node.title,
+      description: node.description,
+      imageSrc: node.featuredImage?.url || fallbackImage,
+      price: node.priceRange?.minVariantPrice?.amount || '0.00',
+      currency: node.priceRange?.minVariantPrice?.currencyCode || 'USD',
+      handle: node.handle,
+      url: shopifyUrl,
+      tags: node.tags || [],
+      category: node.productType || '',
+      variantId: node.variants?.edges?.[0]?.node?.id || '',
+      variants: [],
+    }))
 }

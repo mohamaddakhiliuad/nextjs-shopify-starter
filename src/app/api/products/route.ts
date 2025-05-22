@@ -1,21 +1,19 @@
-// src/app/api/shopify/products/route.ts
-
-export const runtime = 'edge' // Enable Edge Runtime for faster response time
+export const runtime = 'edge' // Use Vercel Edge Functions for faster global performance
 
 /**
  * Shopify Product API Proxy
- * --------------------------
- * This API route handles two use cases:
- * - GET /api/shopify/products             → Fetch multiple products
- * - GET /api/shopify/products?handle=xyz → Fetch a single product by handle
- * 
- * Accepts optional query params:
- * - handle: string  → fetch a specific product
- * - count: number   → number of products to fetch (default: 3)
+ * ------------------------------------------------
+ * Handles:
+ * - GET /api/shopify/products             → fetch multiple products
+ * - GET /api/shopify/products?handle=xyz → fetch a single product
+ *
+ * Optional query params:
+ * - handle: string → fetch a product by handle
+ * - count: number  → number of products to fetch (default: 3)
  */
 
 export async function GET(request: Request) {
-  // Env vars
+  // Env variables (ensure these are set in your environment)
   const SHOPIFY_DOMAIN = process.env.SHOPIFY_DOMAIN!
   const STOREFRONT_TOKEN = process.env.SHOPIFY_TOKEN!
 
@@ -26,11 +24,11 @@ export async function GET(request: Request) {
   let query = ''
 
   // --------------------------------------------
-  // Build GraphQL Query
+  // Build GraphQL query based on mode
   // --------------------------------------------
 
   if (handle) {
-    // Fetch single product by handle
+    // Fetch a specific product by handle
     query = `
       {
         productByHandle(handle: "${handle}") {
@@ -38,6 +36,8 @@ export async function GET(request: Request) {
           title
           description
           handle
+          productType          # <-- category
+          tags                 # <-- filter tags
           featuredImage {
             url
             altText
@@ -78,6 +78,8 @@ export async function GET(request: Request) {
               title
               description
               handle
+              productType        # <-- category
+              tags               # <-- filter tags
               featuredImage {
                 url
                 altText
@@ -112,7 +114,7 @@ export async function GET(request: Request) {
   }
 
   // --------------------------------------------
-  // Fetch from Shopify Storefront API
+  // Call Shopify Storefront GraphQL API
   // --------------------------------------------
 
   try {
@@ -127,7 +129,7 @@ export async function GET(request: Request) {
 
     const json = await response.json()
 
-    // If specific product is requested
+    // Return single product
     if (handle) {
       return new Response(
         JSON.stringify({ product: json.data.productByHandle }),
@@ -146,9 +148,12 @@ export async function GET(request: Request) {
 
   } catch (error) {
     console.error('[Shopify API Error]', error)
-    return new Response(JSON.stringify({ error: 'Failed to fetch data from Shopify' }), {
-      headers: { 'Content-Type': 'application/json' },
-      status: 500,
-    })
+    return new Response(
+      JSON.stringify({ error: 'Failed to fetch data from Shopify' }),
+      {
+        headers: { 'Content-Type': 'application/json' },
+        status: 500,
+      }
+    )
   }
 }
