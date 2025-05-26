@@ -63,6 +63,7 @@ config/
 
 ---
 ## 💡 Customize Behavior
+```bash
 All feature toggles (like lightbox options) are configured in:
 // src/config/settings.ts
 export const LIGHTBOX_CONFIG = {
