@@ -41,16 +41,26 @@ All visual styles (colors, spacing, font system) are centralized in:
 /src/styles/theme.ts
 
 /src/styles/formStyles.ts
+
 ---
 ## 📦 Folder Structure
+
 components/
+
 ├── product/
+
 ├── forms/
+
 ├── ui/
+
 styles/
+
 types/
+
 utils/
+
 config/
+
 ---
 ## 💡 Customize Behavior
 All feature toggles (like lightbox options) are configured in:
