@@ -81,9 +81,10 @@ export const LIGHTBOX_CONFIG = {
  ``` 
 ---
 
-##🤝 Contributions
+## 🤝 Contributions
 
 Pull requests welcome. Want to add blog support, animations, or CMS integration? Let’s build it together.
+
 ---
 
 ## ✨ Created with love by Mohammad Dakhilitarghi
