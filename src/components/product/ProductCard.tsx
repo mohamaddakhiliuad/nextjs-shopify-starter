@@ -21,8 +21,9 @@ interface ProductCardProps {
  * ProductCard
  * ---------------------------
  * Clean and structured card for displaying a product with image, title, price, and actions.
- * - Styled via formStyles.ts for consistent design
- * - Includes links to detail page and external Shopify product
+ * - Uses centralized styles from formStyles.ts for consistency and maintainability
+ * - Structured for SEO with schema.org/Product
+ * - Includes both internal and external links (e.g., to Shopify)
  */
 export default function ProductCard({ product, shopUrl }: ProductCardProps) {
   const productLink = `/products/${product.handle}`
@@ -30,6 +31,8 @@ export default function ProductCard({ product, shopUrl }: ProductCardProps) {
 
   return (
     <div className={cardBase} itemScope itemType="https://schema.org/Product">
+      
+      {/* Product image with link to internal detail page */}
       <Link href={productLink}>
         <img
           src={imageSrc}
@@ -39,16 +42,19 @@ export default function ProductCard({ product, shopUrl }: ProductCardProps) {
         />
       </Link>
 
+      {/* Product title below the image */}
       <h3 className={productTitleInsidGrid}>
         <Link href={productLink} itemProp="name">
           {product.title}
         </Link>
       </h3>
 
+      {/* Product price in main color */}
       <p className={productPrice}>
         ${product.price} {product.currency}
       </p>
 
+      {/* Button group: internal detail + external store link */}
       <div className={cardButtonGroup}>
         <Link
           href={productLink}

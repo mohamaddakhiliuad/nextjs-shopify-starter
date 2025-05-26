@@ -1,15 +1,17 @@
-import { Product } from '@/types/product'
+'use client'
+
 import Link from 'next/link'
+import { Product } from '@/types/product'
+
 import {
-  buttonPrimary,
-  buttonOutline,
   cardBase,
   productImage,
-  productTitle,
+  productTitleInsidGrid,
   productDescription,
   productPrice,
   cardButtonGroup,
-  productTitleInsidGrid,
+  buttonPrimary,
+  buttonOutline,
 } from '@/styles/formStyles'
 
 interface Props extends Product {
@@ -19,6 +21,14 @@ interface Props extends Product {
   shopUrl?: string
 }
 
+/**
+ * ItemCard
+ * ---------------------------
+ * Product listing card used in curated or related product sections.
+ * Includes image, title, description, price, and action buttons.
+ * - Reuses core styles from formStyles.ts
+ * - Allows optional handlers or direct Shopify fallback links
+ */
 export default function ItemCard({
   title,
   description,
@@ -36,12 +46,19 @@ export default function ItemCard({
 
   return (
     <div className={cardBase}>
+      
+      {/* Product image */}
       <img src={imageSrc} alt={title} className={productImage} />
 
+      {/* Product info block */}
       <div>
+        {/* Title */}
         <h3 className={productTitleInsidGrid}>{title}</h3>
+
+        {/* Optional description */}
         <p className={productDescription}>{description}</p>
 
+        {/* Price */}
         {price && (
           <p className={productPrice}>
             ${price} {currency}
@@ -49,20 +66,22 @@ export default function ItemCard({
         )}
       </div>
 
+      {/* Button group */}
       {handle && (
         <div className={cardButtonGroup}>
+
           {/* Add to Cart */}
           {onAddToCartClick ? (
             <button
               onClick={() => onAddToCartClick(variantId || '')}
-              className={buttonPrimary + ' text-sm'}
+              className={`${buttonPrimary} text-sm`}
             >
               Add to Cart
             </button>
           ) : (
             <a
               href={`${baseUrl}/cart/add?id=${variantId}`}
-              className={buttonPrimary + ' text-sm'}
+              className={`${buttonPrimary} text-sm`}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -70,12 +89,13 @@ export default function ItemCard({
             </a>
           )}
 
-         <Link
-      href={`/products/${handle}`}
-      className={buttonOutline + ' text-sm text-center'}
-    >
-      Read More
-    </Link>
+          {/* Read More */}
+          <Link
+            href={`/products/${handle}`}
+            className={`${buttonOutline} text-sm text-center`}
+          >
+            Read More
+          </Link>
         </div>
       )}
     </div>

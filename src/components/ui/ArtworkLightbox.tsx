@@ -5,6 +5,7 @@ import Lightbox from 'yet-another-react-lightbox'
 import Zoom from 'yet-another-react-lightbox/plugins/zoom'
 import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails'
 import Captions from 'yet-another-react-lightbox/plugins/captions'
+
 import 'yet-another-react-lightbox/styles.css'
 import 'yet-another-react-lightbox/plugins/thumbnails.css'
 import 'yet-another-react-lightbox/plugins/captions.css'
@@ -17,45 +18,55 @@ interface ArtworkLightboxProps {
   relatedProducts?: Product[]
 }
 
+/**
+ * ArtworkLightbox
+ * ---------------------------------------
+ * Zoomable and scrollable product artwork viewer
+ * - Uses Lightbox with Zoom, Thumbnails, Captions
+ * - Displays related artwork in the same gallery if enabled
+ * - Central to product experience on detail pages
+ */
 export default function ArtworkLightbox({ currentProduct, relatedProducts = [] }: ArtworkLightboxProps) {
   const [open, setOpen] = useState(false)
   const [currentIndex, setCurrentIndex] = useState(0)
 
-  // Build gallery from product images
+  // Construct main gallery
   const galleryImages = currentProduct.gallery?.length
     ? currentProduct.gallery
     : [currentProduct.imageSrc]
 
-  // Remove default captions by omitting description/title fields
+  // Convert images to slide format
   const gallerySlides = galleryImages.map((src) => ({
     src,
     handle: currentProduct.handle,
   }))
 
+  // Optional: related product artwork
   const relatedSlides = relatedProducts.map((p) => ({
     src: p.imageSrc || '/fallback.jpg',
     handle: p.handle,
   }))
 
-  const allSlides = [...gallerySlides, ...relatedSlides]
-  const slides = LIGHTBOX_CONFIG.enableNext ? allSlides : gallerySlides
+  // Combine slides if enabled
+  const slides = LIGHTBOX_CONFIG.enableNext
+    ? [...gallerySlides, ...relatedSlides]
+    : gallerySlides
 
+  // Keyboard shortcut for Escape
   useEffect(() => {
-    if (slides.length > 0) {
-      console.log('[Lightbox Slides Handles]', slides.map(s => s.handle))
+    if (!LIGHTBOX_CONFIG.keyboardShortcuts) return
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false)
     }
 
-    if (LIGHTBOX_CONFIG.keyboardShortcuts) {
-      const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === 'Escape') setOpen(false)
-      }
-      window.addEventListener('keydown', handleKeyDown)
-      return () => window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [slides])
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
   return (
     <>
+      {/* Thumbnail trigger image */}
       <img
         src={galleryImages[0]}
         alt={currentProduct.title}
@@ -63,6 +74,7 @@ export default function ArtworkLightbox({ currentProduct, relatedProducts = [] }
         className="cursor-zoom-in rounded-xl shadow-md transition hover:scale-105 duration-200"
       />
 
+      {/* Full Lightbox */}
       <Lightbox
         open={open}
         close={() => {
@@ -70,19 +82,15 @@ export default function ArtworkLightbox({ currentProduct, relatedProducts = [] }
           setCurrentIndex(0)
         }}
         slides={slides}
-        plugins={[Zoom, ...(LIGHTBOX_CONFIG.thumbnails ? [Thumbnails] : []), Captions]}
         index={currentIndex}
-        on={{
-          view: ({ index }) => setCurrentIndex(index),
-        }}
+        plugins={[Zoom, ...(LIGHTBOX_CONFIG.thumbnails ? [Thumbnails] : []), Captions]}
+        on={{ view: ({ index }) => setCurrentIndex(index) }}
         animation={LIGHTBOX_CONFIG.animationEffects ? { fade: 400 } : undefined}
         thumbnails={LIGHTBOX_CONFIG.thumbnails ? { position: 'bottom' } : undefined}
         captions={{
           showToggle: false,
           descriptionTextAlign: 'center',
-          render: {
-            description: () => null,
-          },
+          render: { description: () => null },
         }}
         render={{
           slide: ({ slide }) => (
@@ -92,8 +100,11 @@ export default function ArtworkLightbox({ currentProduct, relatedProducts = [] }
                 alt="Artwork"
                 className="max-h-[80vh] object-contain mt-[10vh] mb-4"
               />
+
               <div className="bg-black/70 text-white rounded-lg px-4 py-2 max-w-xl w-full text-center text-sm">
                 <p>{slide.handle === currentProduct.handle ? `By ${currentProduct.title}` : 'Explore more artwork'}</p>
+
+                {/* Share and details links */}
                 {slide.handle && LIGHTBOX_CONFIG.shareButtons && (
                   <div className="mt-3 space-x-4">
                     <a
@@ -112,8 +123,12 @@ export default function ArtworkLightbox({ currentProduct, relatedProducts = [] }
                     </a>
                   </div>
                 )}
+
+                {/* Coming soon preview */}
                 {LIGHTBOX_CONFIG.previewOnWall && (
-                  <div className="mt-4 italic text-xs text-gray-300">Preview on wall coming soon...</div>
+                  <div className="mt-4 italic text-xs text-gray-300">
+                    Preview on wall coming soon...
+                  </div>
                 )}
               </div>
             </div>
@@ -121,7 +136,7 @@ export default function ArtworkLightbox({ currentProduct, relatedProducts = [] }
         }}
       />
 
-      {/* Optional dark vignette effect */}
+      {/* Optional vignette overlay */}
       {open && LIGHTBOX_CONFIG.vignetteEffect && (
         <div className="fixed inset-0 pointer-events-none z-[9998] bg-black/40 backdrop-blur-sm" />
       )}

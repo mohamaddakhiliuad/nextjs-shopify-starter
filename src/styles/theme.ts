@@ -1,25 +1,32 @@
-// رنگ‌های برند نُورا
+// theme.ts
+
 export const colors = {
   primary: '#5e4033',
-  primaryLight: '#fff8f2',
-  textDark: '#5e4033',
-  textLight: '#ffffff',
-  border: '#d1c4b2',
-  accent: '#facc15', // زرد برند
-  error: '#dc2626'
+  background: '#fff8f2',
+  accent: '#fef6e4',
+  text: '#333',
+  mutedText: '#888',
+  border: '#e0d6cc',
+  highlight: '#fbaf3f', // warm orange
 }
 
-// فونت‌ها
-export const fonts = {
-  heading: 'var(--font-geist-sans), serif',
-  body: 'var(--font-geist-sans), sans-serif',
+export const typography = {
+  heading: 'font-serif text-[#5e4033]',
+  body: 'text-sm text-gray-700',
+  small: 'text-xs text-gray-500',
 }
 
-// فاصله‌ها (spacing)
 export const spacing = {
-  xs: '0.25rem',
-  sm: '0.5rem',
-  base: '1rem',
-  lg: '2rem',
-  xl: '4rem',
+  sectionPadding: 'px-6 py-16',
+  cardPadding: 'p-4',
+}
+
+export const borderRadius = {
+  base: 'rounded-xl',
+  button: 'rounded-full',
+}
+
+export const shadow = {
+  base: 'shadow-md',
+  hover: 'hover:shadow-lg transition-shadow duration-200',
 }

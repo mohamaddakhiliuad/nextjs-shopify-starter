@@ -1,6 +1,12 @@
 'use client'
 
 import { ChangeEvent } from 'react'
+import {
+  filterButton,
+  filterButtonActive,
+  filterGroup,
+  filterDropdown,
+} from '@/styles/formStyles'
 
 interface ProductFilterProps {
   tags: string[]
@@ -14,9 +20,10 @@ interface ProductFilterProps {
 /**
  * ProductFilter
  * --------------------------------------------
- * UI filter component for tag and category selection
- * - Prevents full page reload on change
- * - Accepts handlers for both tag and category filters
+ * Tag and category filter UI for product grids
+ * - Tag filters rendered as buttons
+ * - Category filter rendered as <select> dropdown
+ * - Controlled through external handlers
  */
 export default function ProductFilter({
   tags,
@@ -26,24 +33,21 @@ export default function ProductFilter({
   onTagChange,
   onCategoryChange,
 }: ProductFilterProps) {
-  // Handle <select> without triggering page reload
+  // Handle dropdown change event
   const handleCategoryChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value
     onCategoryChange(value === '' ? null : value)
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-4 mb-6">
-      {/* Tag filters (as buttons) */}
+    <div className={filterGroup}>
+
+      {/* Tag Filters */}
       {tags.length > 0 && (
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => onTagChange(null)}
-            className={`px-4 py-1 border rounded-full text-sm transition ${
-              selectedTag === null
-                ? 'bg-[#5e4033] text-white'
-                : 'border-[#5e4033] text-[#5e4033]'
-            }`}
+            className={selectedTag === null ? filterButtonActive : filterButton}
           >
             All
           </button>
@@ -51,11 +55,7 @@ export default function ProductFilter({
             <button
               key={tag}
               onClick={() => onTagChange(tag)}
-              className={`px-4 py-1 border rounded-full text-sm transition ${
-                selectedTag === tag
-                  ? 'bg-[#5e4033] text-white'
-                  : 'border-[#5e4033] text-[#5e4033]'
-              }`}
+              className={selectedTag === tag ? filterButtonActive : filterButton}
             >
               {tag}
             </button>
@@ -63,18 +63,16 @@ export default function ProductFilter({
         </div>
       )}
 
-      {/* Category filter (as dropdown) */}
+      {/* Category Dropdown */}
       {categories.length > 0 && (
         <select
           value={selectedCategory || ''}
           onChange={handleCategoryChange}
-          className="px-3 py-1 border border-[#5e4033] text-sm rounded text-[#5e4033] bg-white"
+          className={filterDropdown}
         >
           <option value="">All Categories</option>
-          {categories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
+          {categories.map(cat => (
+            <option key={cat} value={cat}>{cat}</option>
           ))}
         </select>
       )}

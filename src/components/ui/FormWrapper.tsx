@@ -2,47 +2,51 @@
 
 import { ReactNode } from 'react'
 import clsx from 'clsx'
+import {
+  formSectionWrapper,
+  formTitle,
+  formDescription,
+} from '@/styles/formStyles'
 
 interface FormWrapperProps {
-  title?: string         // Optional title for the form section
-  description?: string   // Optional subtitle or explanation
-  children: ReactNode    // The actual form content (fields, buttons, etc.)
-  className?: string     // Optional custom class for wrapper
+  title?: string         // Optional section title
+  description?: string   // Optional subtitle
+  children: ReactNode    // Form fields or inner content
+  className?: string     // Optional override class
 }
 
 /**
  * FormWrapper
- * ------------
- * A reusable UI component that wraps any form content with consistent styling.
- * Includes an optional title and description.
- *
- * Use this to ensure visual consistency across all forms in the app
- * (e.g., contact forms, clinical forms, registration forms, etc.)
+ * ----------------------------
+ * Reusable UI wrapper for sections or forms
+ * - Accepts optional title and description
+ * - Ensures consistent padding and spacing
+ * - Applies global form styles
  */
 export default function FormWrapper({
   title,
   description,
   children,
-  className
+  className,
 }: FormWrapperProps) {
   return (
-    <section className={clsx('max-w-2xl mx-auto px-6 py-10', className)}>
+    <section className={clsx(formSectionWrapper, className)}>
       
-      {/* Render title if provided */}
+      {/* Title */}
       {title && (
-        <h2 className="text-2xl font-semibold text-[#5e4033] mb-2">
+        <h2 className={formTitle}>
           {title}
         </h2>
       )}
 
-      {/* Render description if provided */}
+      {/* Subtitle / Description */}
       {description && (
-        <p className="text-sm text-gray-600 mb-6">
+        <p className={formDescription}>
           {description}
         </p>
       )}
 
-      {/* Form content goes here */}
+      {/* Form content */}
       <div className="space-y-6">
         {children}
       </div>

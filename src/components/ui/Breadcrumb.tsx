@@ -2,10 +2,11 @@
 
 import Link from 'next/link'
 import clsx from 'clsx'
+import { breadcrumbWrapper, breadcrumbLink, breadcrumbCurrent } from '@/styles/formStyles'
 
 interface BreadcrumbItem {
   label: string
-  href?: string  // If href is absent, this item is the current page
+  href?: string // If href is absent, this item is the current page
 }
 
 interface BreadcrumbProps {
@@ -16,44 +17,30 @@ interface BreadcrumbProps {
 /**
  * Breadcrumb
  * ----------
- * Renders a list of navigational links showing the current page position.
- * - Uses <nav aria-label="breadcrumb"> for accessibility / SEO.
- * - Items with href render as links; last item (no href) as plain text.
- * - Separator “/” is injected between items.
- *
- * Example usage:
- * <Breadcrumb
- *   items={[
- *     { label: 'Home', href: '/' },
- *     { label: 'Products', href: '/products' },
- *     { label: product.title }
- *   ]}
- * />
+ * SEO-friendly navigation showing page hierarchy.
+ * - Uses <nav aria-label="breadcrumb">
+ * - Last item is plain text; others are links
+ * - Uses formStyles for consistent styling
  */
 export default function Breadcrumb({ items, className }: BreadcrumbProps) {
   return (
-    <nav
-      aria-label="breadcrumb"
-      className={clsx('text-sm text-gray-400 mb-2', className)}
-    >
+    <nav aria-label="breadcrumb" className={clsx(breadcrumbWrapper, className)}>
       {items.map((item, idx) => {
-        // Render link for all but last item
         const isLast = idx === items.length - 1
         return (
           <span key={idx} className="inline-flex items-center">
             {item.href && !isLast ? (
-              <Link href={item.href} className="hover:underline">
+              <Link href={item.href} className={breadcrumbLink}>
                 {item.label}
               </Link>
             ) : (
               <span
                 aria-current={isLast ? 'page' : undefined}
-                className={clsx(isLast && 'text-[#5e4033]')}
+                className={breadcrumbCurrent}
               >
                 {item.label}
               </span>
             )}
-            {/* Separator: show slash after every item except the last */}
             {!isLast && <span className="mx-2">/</span>}
           </span>
         )

@@ -1,73 +1,166 @@
-// src/styles/formStyles.ts
-// ----------------------------------------------
-// This file centralizes commonly used Tailwind CSS class names 
-// for form elements and product UI components.
-// Author: Mohammad Dakhili — Noura Template
-// ----------------------------------------------
+// formStyles.ts
+// ------------------------------
+// Reusable design system styles for Noura project
+// Sourced values are imported from theme.ts to ensure central control and consistency.
 
-import clsx from 'clsx'
+import { colors, borderRadius, shadow, spacing, typography } from './theme'
 
-// ---------------------
-// Inputs & Labels
-// ---------------------
-export const inputBase =
-  'w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#5e4033] transition'
+/** ProductCard
+ * ---------------------------
+ * Base card layout for displaying a product.
+ */
+export const cardBase = `bg-white ${borderRadius.base} ${shadow.base} ${spacing.cardPadding} flex flex-col justify-between`
 
-export const textareaBase =
-  'w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm resize-none h-32 focus:outline-none focus:ring-2 focus:ring-[#5e4033] transition'
+/** ProductImage
+ * ---------------------------
+ * Responsive and uniform product image presentation.
+ */
+export const productImage = `w-full aspect-[4/5] object-cover ${borderRadius.base} ${shadow.base} transition-transform duration-300 hover:scale-105`
 
-export const labelBase =
-  'block text-sm font-medium text-[#5e4033] mb-1'
+/** Product Title (Standalone or Grid)
+ * --------------------------- */
+export const productTitle = `${typography.heading} text-lg mb-2`
+export const productTitleInsidGrid = `text-lg ${typography.heading} mt-4`
 
-// ---------------------
-// Buttons
-// ---------------------
-export const buttonPrimary =
-  'bg-[#5e4033] text-white px-4 py-2 rounded-full hover:bg-[#3e2f27] transition'
+/** Product Description
+ * --------------------------- */
+export const productDescription = `${typography.body} line-clamp-2 mt-1`
 
-export const buttonOutline =
-  'border border-[#5e4033] text-[#5e4033] px-4 py-2 rounded-full hover:bg-[#f8f1ee] transition'
+/** Product Price
+ * --------------------------- */
+export const productPrice = `text-base font-semibold ${colors.primary && 'text-[#5e4033]'} mt-2`
 
-export const toastButton = 'text-sm underline font-medium hover:text-[#3e2e24]'
-export const quantityButton = 'text-lg px-2'
+/** Button Group inside Cards
+ * --------------------------- */
+export const cardButtonGroup = 'flex flex-wrap justify-start items-center gap-4 mt-4'
 
-// ---------------------
-// Layout
-// ---------------------
-export const quantityBox = 'flex items-center border rounded-full px-3 py-1 bg-white'
-export const cardButtonGroup = 'mt-4 flex flex-col gap-2 sm:flex-row sm:justify-center'
+/** Button - Primary
+ * --------------------------- */
+export const buttonPrimary = `bg-[#5e4033] text-white text-sm px-5 py-2 ${borderRadius.button} hover:bg-[#3e2e24] transition`
 
-// ---------------------
-// Product UI
-// ---------------------
-export const cardBase = 'bg-white p-6 rounded-xl shadow-md text-center flex flex-col justify-between h-full'
-export const productImage = 'mx-auto h-32 object-cover mb-4 rounded-lg'
-export const productTitleInsidGrid = 'text-lg font-medium text-[#5e4033]'
-export const productDescription = 'text-sm text-gray-600 mt-1 line-clamp-3'
-export const productPrice = 'text-[#5e4033] font-semibold text-sm mt-2'
-export const productTitle = 'text-3xl font-serif text-[#5e4033]'
-export const priceStyle = 'text-2xl font-semibold text-[#5e4033] mt-2'
+/** Button - Outline
+ * --------------------------- */
+export const buttonOutline = `border border-[#5e4033] text-[#5e4033] text-sm px-5 py-2 ${borderRadius.button} hover:bg-[#5e4033] hover:text-white transition`
 
-// ---------------------
-// Variant Selectors
-// ---------------------
-export const variantButtonClass = (active: boolean) =>
-  clsx(
-    'px-3 py-1 border rounded-full text-sm transition',
-    active ? 'bg-[#5e4033] text-white' : 'bg-white text-[#5e4033]'
-  )
+/** Add to Cart Button (Primary CTA)
+ * -------------------------------------
+ * Used inside product detail page and forms
+ */
+export const buttonCartFull = `${buttonPrimary} px-6 py-3 text-sm flex items-center gap-2`
 
-// ---------------------
-// Toasts
-// ---------------------
-export const toastSuccessBox = (extra?: string) =>
-  clsx(
-    'bg-[#fff8f2]',
-    'border border-[#5e4033]',
-    'shadow-lg',
-    'rounded-xl',
-    'p-4',
-    'ring-1 ring-black ring-opacity-5',
-    'text-[#5e4033]',
-    extra
-  )
+/** Add to Cart Button (Compact for Cards)
+ * ----------------------------------------
+ * Smaller variant used inside product cards or lists
+ */
+export const buttonCartCompact = `${buttonPrimary} text-sm px-4 py-2 flex items-center gap-2`
+
+/** Quantity Selector
+ * --------------------------- */
+export const quantityBox = 'border border-[#5e4033] rounded-full flex items-center px-4 py-1'
+export const quantityButton = 'text-[#5e4033] text-lg px-2 hover:text-[#3e2e24] transition'
+
+/** Variant Selector Button
+ * --------------------------- */
+export const variantButtonClass = (selected: boolean) =>
+  `px-4 py-1 border rounded-full text-sm transition ${
+    selected
+      ? 'bg-[#5e4033] text-white'
+      : 'border-[#5e4033] text-[#5e4033] hover:bg-[#fef6e4]'
+  }`
+/** Filter Wrapper Group
+ * ---------------------------
+ * Layout container for tag and category filters
+ */
+export const filterGroup = 'flex flex-wrap items-center gap-4 mb-6'
+
+/** Filter Button (Inactive)
+ * ---------------------------
+ * Used for non-selected tag buttons
+ */
+export const filterButton = 'px-4 py-1 border border-[#5e4033] text-[#5e4033] rounded-full text-sm transition hover:bg-[#fef6e4]'
+
+/** Filter Button (Active)
+ * ---------------------------
+ * Used for selected tag buttons
+ */
+export const filterButtonActive = 'px-4 py-1 bg-[#5e4033] text-white rounded-full text-sm transition'
+
+/** Filter Dropdown (Category)
+ * ---------------------------
+ * Styled <select> for category selection
+ */
+export const filterDropdown = 'px-3 py-1 border border-[#5e4033] text-sm rounded text-[#5e4033] bg-white'
+/** Section Wrapper
+ * ---------------------------
+ * Outer layout for major UI sections like grids
+ */
+export const sectionWrapper = 'w-full mt-10 px-4 sm:px-6 lg:px-8'
+
+/** Section Title
+ * ---------------------------
+ * Common heading for grids and sections
+ */
+export const sectionTitle = 'text-2xl font-serif text-[#5e4033] mb-6'
+
+/** Grid Base
+ * ---------------------------
+ * Base class for responsive grid layout
+ */
+export const gridBase = 'grid gap-6'
+
+/** Breadcrumb Navigation
+ * ---------------------------
+ * Wrapper for full breadcrumb section
+ */
+export const breadcrumbWrapper = 'text-sm text-gray-400 mb-2'
+
+/** Breadcrumb Link
+ * ---------------------------
+ * Style for breadcrumb links
+ */
+export const breadcrumbLink = 'hover:underline text-gray-500'
+
+/** Breadcrumb Current Page
+ * ---------------------------
+ * Style for the current (active) breadcrumb item
+ */
+export const breadcrumbCurrent = 'text-[#5e4033] font-medium'
+/** Form Section Wrapper
+ * ---------------------------
+ * Common wrapper for form sections with padding
+ */
+export const formSectionWrapper = 'max-w-2xl mx-auto px-6 py-10'
+
+/** Form Section Title
+ * ---------------------------
+ * Used in FormWrapper titles
+ */
+export const formTitle = 'text-2xl font-semibold text-[#5e4033] mb-2'
+
+/** Form Section Description
+ * ---------------------------
+ * Small subtitle below title
+ */
+export const formDescription = 'text-sm text-gray-600 mb-6'
+/** Skeleton Card Container
+ * ---------------------------
+ * Layout and spacing for skeleton loading cards
+ */
+export const skeletonCard = 'bg-white rounded-xl shadow-md p-4 animate-pulse space-y-4'
+
+/** Skeleton Block (base)
+ * ---------------------------
+ * Reusable base for title, price, or button loading bars
+ */
+export const skeletonBlock = 'h-4 bg-gray-200 rounded'
+/** Toast Box Container
+ * ---------------------------
+ * Custom toast wrapper with theme-based layout
+ */
+export const toastBox = 'bg-[#fff8f2] border border-[#5e4033] shadow-lg rounded-xl p-4 ring-1 ring-black ring-opacity-5 text-[#5e4033] max-w-sm w-full'
+
+/** Toast Link/Button
+ * ---------------------------
+ * Link/button inside toast actions
+ */
+export const toastLink = 'underline text-[#5e4033] hover:text-[#3e2e24] transition'

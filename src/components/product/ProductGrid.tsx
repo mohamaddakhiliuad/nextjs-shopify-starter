@@ -6,12 +6,19 @@ import ProductCard from './ProductCard'
 import ProductSkeleton from './ProductSkeleton'
 import ProductFilter from './ProductFilter'
 import { ProductGridProps } from '@/types/ProductGridProps'
+import {
+  sectionWrapper,
+  sectionTitle,
+  gridBase,
+} from '@/styles/formStyles'
 
 /**
  * ProductGrid
  * --------------------------------------------
  * Reusable product listing grid with tag and category filters.
- * - Supports SEO markup, responsive layout, loading state, and empty state
+ * - Supports SEO markup
+ * - Handles loading and empty states
+ * - Uses formStyles for consistent layout and spacing
  */
 export default function ProductGrid({
   title,
@@ -24,7 +31,7 @@ export default function ProductGrid({
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
 
-  // Extract all unique tags
+  // Extract all unique tags from products
   const tags = Array.from(new Set(products.flatMap(p => p.tags || [])))
 
   // Extract all unique categories (productType)
@@ -32,31 +39,28 @@ export default function ProductGrid({
     new Set(products.map(p => p.category || '').filter(Boolean))
   )
 
-  // Filter products by both tag and category
+  // Filter products by selected tag and category
   const filteredProducts = products.filter(p => {
     const tagMatch = selectedTag ? p.tags?.includes(selectedTag) : true
     const categoryMatch = selectedCategory ? p.category === selectedCategory : true
     return tagMatch && categoryMatch
   })
 
-  // Build Tailwind grid layout classes
+  // Dynamic grid column layout based on prop
   const columnClass = clsx(
-    'grid gap-6',
-    `grid-cols-1 sm:grid-cols-2 md:grid-cols-${columns} lg:grid-cols-${Math.min(
-      columns + 1,
-      4
-    )}`
+    gridBase,
+    `grid-cols-1 sm:grid-cols-2 md:grid-cols-${columns} lg:grid-cols-${Math.min(columns + 1, 4)}`
   )
 
   return (
     <section
-      className={clsx('w-full mt-10 px-4 sm:px-6 lg:px-8', className)}
+      className={clsx(sectionWrapper, className)}
       itemScope
       itemType="https://schema.org/ItemList"
     >
-      {/* Optional title */}
+      {/* Optional section title */}
       {title && (
-        <h2 className="text-2xl font-serif text-[#5e4033] mb-6">{title}</h2>
+        <h2 className={sectionTitle}>{title}</h2>
       )}
 
       {/* Tag & Category Filter UI */}
@@ -71,7 +75,7 @@ export default function ProductGrid({
         />
       )}
 
-      {/* Loading skeletons */}
+      {/* Loading state (skeleton cards) */}
       {isLoading ? (
         <div className={columnClass}>
           {[...Array(3)].map((_, i) => (
@@ -79,10 +83,12 @@ export default function ProductGrid({
           ))}
         </div>
       ) : filteredProducts.length === 0 ? (
+        // Empty state
         <div className="text-center text-gray-500 py-12">
           <p>No products found for the selected filters.</p>
         </div>
       ) : (
+        // Product grid
         <div className={columnClass}>
           {filteredProducts.map((product, index) => (
             <div

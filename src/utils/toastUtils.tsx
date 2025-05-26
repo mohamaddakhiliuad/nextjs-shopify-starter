@@ -2,22 +2,24 @@
 
 import toast, { type Toast } from 'react-hot-toast'
 import clsx from 'clsx'
+import { toastBox, toastLink } from '@/styles/formStyles'
 
-// Toast box style generator
+/**
+ * toastBoxClass
+ * -----------------------
+ * Conditional wrapper for entrance animation
+ * Uses centralized styles from formStyles.ts
+ */
 const toastBoxClass = (visible: boolean) =>
-  clsx(
-    'bg-[#fff8f2]',
-    'border border-[#5e4033]',
-    'shadow-lg',
-    'rounded-xl',
-    'p-4',
-    'ring-1 ring-black ring-opacity-5',
-    'text-[#5e4033]',
-    'max-w-sm w-full',
-    visible ? 'animate-enter' : 'animate-leave'
-  )
+  clsx(toastBox, visible ? 'animate-enter' : 'animate-leave')
 
-// ✅ MAIN EXPORT FUNCTION
+/**
+ * showAddToCartToast
+ * -----------------------
+ * Custom toast for confirming item added to cart
+ * - Displays item title, quantity, and optional color
+ * - Includes links to View Cart and Continue Shopping
+ */
 export const showAddToCartToast = ({
   title,
   quantity,
@@ -29,31 +31,26 @@ export const showAddToCartToast = ({
   color?: string
   productUrl: string
 }) => {
-  toast.custom((t: Toast) => {
-    return (
-      <div className={toastBoxClass(t.visible)}>
-        <div className="flex items-start">
-          <div className="text-2xl mr-3">🛒</div>
-          <div className="flex-1 text-sm">
-            <p className="font-semibold">
-              {quantity} × {title}
-              {color ? ` (${color})` : ''}
-            </p>
-            <p className="text-[#5e4033]/70">added to your cart successfully.</p>
-            <div className="mt-2 flex gap-4">
-              <a href={`${productUrl}/cart`} className="underline text-[#5e4033]">
-                View Cart
-              </a>
-              <button
-                onClick={() => toast.dismiss(t.id)}
-                className="underline text-[#5e4033]"
-              >
-                Continue Shopping
-              </button>
-            </div>
+  toast.custom((t: Toast) => (
+    <div className={toastBoxClass(t.visible)}>
+      <div className="flex items-start">
+        <div className="text-2xl mr-3">🛒</div>
+        <div className="flex-1 text-sm">
+          <p className="font-semibold">
+            {quantity} × {title}
+            {color ? ` (${color})` : ''}
+          </p>
+          <p className="text-[#5e4033]/70">added to your cart successfully.</p>
+          <div className="mt-2 flex gap-4">
+            <a href={`${productUrl}/cart`} className={toastLink}>
+              View Cart
+            </a>
+            <button onClick={() => toast.dismiss(t.id)} className={toastLink}>
+              Continue Shopping
+            </button>
           </div>
         </div>
       </div>
-    )
-  })
+    </div>
+  ))
 }

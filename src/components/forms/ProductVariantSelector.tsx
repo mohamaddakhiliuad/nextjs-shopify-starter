@@ -1,6 +1,5 @@
 'use client'
 
-import clsx from 'clsx'
 import { variantButtonClass } from '@/styles/formStyles'
 
 interface ProductVariant {
@@ -17,14 +16,9 @@ interface ProductVariantSelectorProps {
 /**
  * ProductVariantSelector
  * -----------------------
- * Reusable component for selecting product variants (e.g., colors).
- * 
- * Props:
- * - variants: array of variant objects with id and color
- * - selectedId: currently selected variant id
- * - onSelect: callback to change selected variant
- * 
- * Styling is pulled from formStyles to keep the UI consistent and DRY.
+ * Reusable component for selecting product variants (e.g., colors or sizes).
+ * - Controlled via selectedId and onSelect handler
+ * - Uses centralized variant button styling from formStyles.ts
  */
 export default function ProductVariantSelector({
   variants,
@@ -35,8 +29,11 @@ export default function ProductVariantSelector({
 
   return (
     <div className="mt-4 space-x-3">
+
+      {/* Label for variant selection */}
       <span className="text-sm text-gray-600">Color:</span>
 
+      {/* Variant buttons */}
       {variants.map((variant) => (
         <button
           key={variant.id}

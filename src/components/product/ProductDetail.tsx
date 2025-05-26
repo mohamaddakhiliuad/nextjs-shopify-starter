@@ -9,10 +9,10 @@ import QuantitySelector from '@/components/forms/QuantitySelector'
 import ProductVariantSelector from '@/components/forms/ProductVariantSelector'
 import AddToCartButton from '@/components/product/AddToCartButton'
 import ProductGrid from '@/components/product/ProductGrid'
-
-import { getRelatedProductsDynamic } from '@/services/shopify'
-import { buttonOutline } from '@/styles/formStyles'
 import ArtworkLightbox from '@/components/ui/ArtworkLightbox'
+
+import { buttonOutline, sectionWrapper, sectionTitle } from '@/styles/formStyles'
+import FormWrapper from '@/components/ui/FormWrapper'
 
 interface Props {
   product: Product
@@ -21,50 +21,47 @@ interface Props {
 /**
  * ProductDetail
  * ------------------------------------------------
- * Displays full product detail page including:
- * - Artwork image with zoom
- * - Title, description, variant and quantity selectors
+ * Full product detail page with:
+ * - Zoomable artwork
+ * - Title, description, variant selector, quantity
  * - Add to cart functionality
- * - Related product suggestions
+ * - Related products
  */
 export default function ProductDetail({ product }: Props) {
   const [quantity, setQuantity] = useState(1)
   const [selectedVariantId, setSelectedVariantId] = useState(product.variantId)
 
-  // Find selected variant object (safe check)
+  // Selected variant logic
   const selectedVariant = product.variants?.find(v => v.id === selectedVariantId)
 
-  // Determine which image to display
+  // Fallback for image
   const imageToShow = selectedVariant?.image || product.imageSrc || ''
-
-  const handleQuantityChange = (delta: number) => {
-    setQuantity(prev => Math.max(1, prev + delta))
-  }
 
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
 
   useEffect(() => {
-    getRelatedProductsDynamic(product)
+    import('@/services/shopify')
+      .then(mod => mod.getRelatedProductsDynamic(product))
       .then(setRelatedProducts)
       .catch(err => console.error('Error loading related products:', err))
   }, [product])
 
   return (
-    <section className="max-w-6xl mx-auto px-6 py-16">
+    <section className={sectionWrapper}>
       <div className="grid md:grid-cols-2 gap-12">
 
-        {/* Zoomable image with lightbox */}
+        {/* Image preview with lightbox */}
         <div className="bg-white rounded-xl shadow-md p-4">
           <ArtworkLightbox
             currentProduct={product}
             relatedProducts={relatedProducts}
           />
-
         </div>
 
-        {/* Product info and interaction */}
+        {/* Product content */}
         <div className="flex flex-col justify-center space-y-4">
-          {/* Breadcrumb navigation */}
+          
+          {/* Breadcrumb */}
           <Breadcrumb
             items={[
               { label: 'Home', href: '/' },
@@ -73,12 +70,14 @@ export default function ProductDetail({ product }: Props) {
             ]}
           />
 
-          {/* Product title and rating */}
-          <h1 className="text-3xl font-serif text-[#5e4033]">{product.title}</h1>
+          {/* Product title */}
+          <h1 className={sectionTitle}>{product.title}</h1>
+
+          {/* Rating and description */}
           <p className="text-yellow-500 text-sm">★ 4.7 (1,250 reviews)</p>
           <p className="text-gray-600">{product.description?.split('\n')[0]}</p>
 
-          {/* Variant selector (if applicable) */}
+          {/* Variant selector */}
           {product.variants?.length > 0 && (
             <ProductVariantSelector
               variants={product.variants}
@@ -88,9 +87,9 @@ export default function ProductDetail({ product }: Props) {
           )}
 
           {/* Quantity selector */}
-          <QuantitySelector quantity={quantity} onChange={handleQuantityChange} />
+          <QuantitySelector quantity={quantity} onChange={setQuantity} />
 
-          {/* Add to cart */}
+          {/* Add to cart CTA */}
           <AddToCartButton
             quantity={quantity}
             variantId={selectedVariantId}
@@ -113,14 +112,16 @@ export default function ProductDetail({ product }: Props) {
         </div>
       </div>
 
-      {/* Related products */}
+      {/* Related products grid */}
       {relatedProducts.length > 0 && (
-        <ProductGrid
-          title="You may also like"
-          products={relatedProducts}
-          shopUrl={product.url || ''}
-          columns={3}
-        />
+        <div className="mt-16">
+          <ProductGrid
+            title="You may also like"
+            products={relatedProducts}
+            shopUrl={product.url || ''}
+            columns={3}
+          />
+        </div>
       )}
     </section>
   )

@@ -11,12 +11,9 @@ interface QuantitySelectorProps {
  * QuantitySelector
  * ----------------
  * Reusable UI component for selecting product quantity.
- * 
- * Props:
- * - quantity: the current quantity number
- * - onChange: callback to increase or decrease quantity (+1 or -1)
- * 
- * Styling is managed via formStyles.ts to maintain visual consistency across the app.
+ * - Controlled via a single numeric value and delta function.
+ * - Button events increment/decrement quantity.
+ * - Styles are centralized in formStyles.ts for consistency.
  */
 export default function QuantitySelector({
   quantity,
@@ -24,14 +21,25 @@ export default function QuantitySelector({
 }: QuantitySelectorProps) {
   return (
     <div className="flex items-center space-x-4 mt-2">
+      
       {/* Label for accessibility */}
       <label className="text-sm text-gray-600">Quantity:</label>
 
-      {/* Container with +/- controls */}
+      {/* Quantity control container */}
       <div className={quantityBox}>
-        <button onClick={() => onChange(-1)} className={quantityButton}>−</button>
+        
+        {/* Decrement button */}
+        <button onClick={() => onChange(-1)} className={quantityButton}>
+          −
+        </button>
+
+        {/* Quantity value */}
         <span className="px-2">{quantity}</span>
-        <button onClick={() => onChange(1)} className={quantityButton}>+</button>
+
+        {/* Increment button */}
+        <button onClick={() => onChange(1)} className={quantityButton}>
+          +
+        </button>
       </div>
     </div>
   )

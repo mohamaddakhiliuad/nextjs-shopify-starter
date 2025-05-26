@@ -3,8 +3,9 @@
 import { useState } from 'react'
 import { FiShoppingCart } from 'react-icons/fi'
 import { showAddToCartToast } from '@/utils/toastUtils'
-import { buttonPrimary } from '@/styles/formStyles'
 import clsx from 'clsx'
+
+import { buttonCartFull } from '@/styles/formStyles'
 
 interface AddToCartButtonProps {
   quantity: number
@@ -17,10 +18,10 @@ interface AddToCartButtonProps {
 /**
  * AddToCartButton
  * ----------------
- * Reusable call-to-action button component to add an item to the cart.
- * - Shows loading state while processing
- * - Uses toast on success (customized with product info)
- * - Pulls primary button style from design system
+ * Reusable call-to-action button to add an item to cart.
+ * - Uses formStyles for consistent CTA styling
+ * - Displays loading state while adding
+ * - Triggers toast notification upon success
  */
 export default function AddToCartButton({
   quantity,
@@ -35,7 +36,7 @@ export default function AddToCartButton({
     setIsAdding(true)
 
     try {
-      // Simulate API delay (you can replace this with real logic later)
+      // Simulate API delay (can be replaced with real logic)
       await new Promise((res) => setTimeout(res, 800))
 
       // Fire toast notification with product info
@@ -57,8 +58,7 @@ export default function AddToCartButton({
       onClick={handleAddToCart}
       disabled={isAdding}
       className={clsx(
-        buttonPrimary,
-        'px-6 py-3 text-sm flex items-center gap-2',
+        buttonCartFull,
         isAdding && 'opacity-50 cursor-not-allowed'
       )}
     >
