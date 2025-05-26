@@ -78,6 +78,7 @@ export const LIGHTBOX_CONFIG = {
   previewOnWall: false,
   vignetteEffect: true,
 }
+ ``` 
 ---
 
 ##🤝 Contributions
