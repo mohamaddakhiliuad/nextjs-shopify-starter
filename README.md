@@ -65,7 +65,10 @@ config/
 ## 💡 Customize Behavior
 
 All feature toggles (like lightbox options) are configured in:
+
 // src/config/settings.ts
+
+ ``` 
 export const LIGHTBOX_CONFIG = {
   thumbnails: true,
   enableNext: true,
@@ -75,8 +78,10 @@ export const LIGHTBOX_CONFIG = {
   previewOnWall: false,
   vignetteEffect: true,
 }
+---
 
-## 🤝 Contributions
+##🤝 Contributions
+
 Pull requests welcome. Want to add blog support, animations, or CMS integration? Let’s build it together.
 ---
 
